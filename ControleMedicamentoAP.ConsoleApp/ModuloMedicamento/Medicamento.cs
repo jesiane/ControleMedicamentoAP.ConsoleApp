@@ -1,18 +1,13 @@
 ﻿using ControleMedicamentoAP.ConsoleApp.Compartilhado;
 using ControleMedicamentoAP.ConsoleApp.ModuloFornecedor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
 
 namespace ControleMedicamentoAP.ConsoleApp.ModuloMedicamento
 {
     public class Medicamento : EntidadeBase
     {
         public string nome;
-        public string descrição;
+        public string descricao;
         public string lote;
         public DateTime validade ;
         public int quantidade ;
@@ -21,7 +16,7 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloMedicamento
         public Medicamento(string nome, string descrição, string lote, DateTime validade, Fornecedor fornecedor)
         {
             this.nome = nome;
-            this.descrição = descrição;
+            this.descricao = descrição;
             this.lote = lote;
             this.validade = validade;
             this.fornecedor = fornecedor;
@@ -32,7 +27,7 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloMedicamento
             Medicamento medicamentoAtualizado = (Medicamento)registroAtualizado;
 
             this.nome = medicamentoAtualizado.nome;
-            this.descrição = medicamentoAtualizado.descrição;
+            this.descricao = medicamentoAtualizado.descricao;
             this.lote = medicamentoAtualizado.lote;
             this.validade = medicamentoAtualizado.validade;
             this.fornecedor = medicamentoAtualizado.fornecedor;
@@ -47,6 +42,28 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloMedicamento
         public void RemoverQuantidade(int qtd)
         {
             this.quantidade -= qtd; 
+        }
+
+        public override ArrayList Validar()
+        {
+            ArrayList erros = new ArrayList();
+
+            if (string.IsNullOrEmpty(nome.Trim()))
+                erros.Add("O campo \"nome\" é obrigatório");
+
+            DateTime hoje = DateTime.Now.Date;
+
+            if (validade < hoje)
+                erros.Add("O campo \"validade\" não pode ser menor que a data atual");
+
+            if (fornecedor == null)
+                erros.Add("O campo \"fornecedor\" é obrigatório");
+
+            if (quantidade < 0)
+                erros.Add("O campo \"quantidade\" não pode ser menor que 0");
+
+            return erros;
+
         }
     }
 }

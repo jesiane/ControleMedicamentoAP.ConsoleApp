@@ -88,7 +88,8 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloMedicamento
             MostrarTabela(medicamentosMaisRetirados);
         }
 
-        public void VisulizarMedicamentosEmFalta()
+      
+        public void VisualizarMedicamentosEmFalta()
         {
             MostrarCabecalho("Cadastro de Medicamentos", "Visualizando medicamentos em falta...");
 
@@ -107,19 +108,15 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloMedicamento
         {
             telaFornecedor.VisualizarRegistros(false);
 
-            Console.Write("\nDigite o id do Forncedor: ");
-            int idFornecedor = Convert.ToInt32(Console.ReadLine());
+            int id = EncontrarId();
 
-            Fornecedor fornecedor = (Fornecedor)repositorioFornecedor.SelecionarPorId(idFornecedor);
+            Fornecedor fornecedor = (Fornecedor)repositorioFornecedor.SelecionarPorId(id);
 
             Console.WriteLine();
 
             return fornecedor;
         }
 
-        internal void VisualizarMedicamentosEmFalta()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

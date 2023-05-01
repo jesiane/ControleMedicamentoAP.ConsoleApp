@@ -2,7 +2,6 @@
 using ControleMedicamentoAP.ConsoleApp.ModuloFuncionario;
 using ControleMedicamentoAP.ConsoleApp.ModuloMedicamento;
 using ControleMedicamentoAP.ConsoleApp.ModuloPaciente;
-using ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoEntrada;
 using System.Collections;
 
 namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoSaida
@@ -40,6 +39,23 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoSaida
             nomeEntidade = "Requisição de Saida";
         }
 
+        public override void InserirNovoRegistro()
+        {
+
+            MostrarCabecalho($"Cadastro de {nomeEntidade}{sufixo}", "Inserindo registro... ");
+            RequisicaoSaida registro = (RequisicaoSaida)ObterRegistro();
+        
+            if (TemErrosDeValidacao(registro))
+            {
+                return;
+            }
+
+            registro.RegistrarSaida();
+
+            repositorioBase.Inserir(registro);
+
+            MostrarMensagem("Registro inserido com sucesso!",ConsoleColor.Green);
+        }
         public override void EditarRegistro()
         {
             MostrarCabecalho($"Cadastro de {nomeEntidade}{sufixo}", "Editando um registro já cadastrado...");
@@ -53,11 +69,20 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoSaida
 
             // Desfazer a alteração a quantidade medicamento;
 
-            RequisicaoSaida requisicaoSaida = (RequisicaoSaida)repositorioRequisicaoSaida.SelecionarPorId(id);
+            RequisicaoSaida requisicaoSaida = repositorioRequisicaoSaida.SelecionarPorId(id);
 
-            EntidadeBase registroAtualizado = ObterRegistro();
+            RequisicaoSaida registroAtualizado = (RequisicaoSaida)ObterRegistro();
 
-            requisicaoSaida.DesfazerRegistroSaida();
+            requisicaoSaida.DesfazerRegistroSaida();    
+
+            //EntidadeBase registroAtualizado = ObterRegistro();
+
+            //requisicaoSaida.DesfazerRegistroSaida();
+
+            if (TemErrosDeValidacao(registroAtualizado))
+            {
+                return;
+            }
 
             repositorioBase.Editar(id, registroAtualizado);
 
@@ -131,11 +156,11 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoSaida
             telaPaciente.VisualizarRegistros(false);
 
             //Selecionar um funcionarios por id
-            Console.Write("Digite o id do funcionario");
-            int idPaciente = Convert.ToInt32(Console.ReadLine());
+
+            int id = EncontrarId();
 
             //Pegar o objeto no repositorio de funcionarios a partir do id seleciomnado
-            Paciente paciente = (Paciente)repositorioPaciente.SelecionarPorId(idPaciente);
+            Paciente paciente = (Paciente)repositorioPaciente.SelecionarPorId(id);
             return paciente;
 
         }
@@ -147,11 +172,10 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoSaida
             telaFuncionario.VisualizarRegistros(false);
 
             //Selecionar um funcionarios por id
-            Console.Write("Digite o id do funcionario");
-            int idfuncionario = Convert.ToInt32(Console.ReadLine());
+            int id = EncontrarId();
 
             //Pegar o objeto no repositorio de funcionarios a partir do id seleciomnado
-            Funcionario funcionario = (Funcionario)repositorioFuncionario.SelecionarPorId(idfuncionario);
+            Funcionario funcionario = (Funcionario)repositorioFuncionario.SelecionarPorId(id);
             return funcionario;
         }
 
@@ -162,11 +186,10 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoSaida
             telaMedicamento.VisualizarRegistros(false);
 
             //Selecionar um medicamento por id
-            Console.Write("Digite o id do medicamento: ");
-            int idMedicamento = Convert.ToInt32(Console.ReadLine());
+            int id = EncontrarId();
 
             //Pegar o objeto no repositorio de medicamento a partir do id seleciomnado
-            Medicamento medicamento = (Medicamento)repositorioMedicamento.SelecionarPorId(idMedicamento);
+            Medicamento medicamento = (Medicamento)repositorioMedicamento.SelecionarPorId(id);
             return medicamento;
 
         }

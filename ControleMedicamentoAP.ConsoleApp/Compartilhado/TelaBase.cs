@@ -29,7 +29,7 @@ namespace ControleMedicamentoAP.ConsoleApp.Compartilhado
             Console.ResetColor();
 
             Console.ReadLine();
-        }   
+        }
 
         public virtual string ApresentarMenu()
         {
@@ -38,7 +38,7 @@ namespace ControleMedicamentoAP.ConsoleApp.Compartilhado
             Console.WriteLine($"Cadastro de {nomeEntidade}{sufixo} \n");
 
             Console.WriteLine($"Digite 1 para Inserir {nomeEntidade}");
-            Console.WriteLine($"Digite 2 para Visualizar {nomeEntidade}{sufixo}"); 
+            Console.WriteLine($"Digite 2 para Visualizar {nomeEntidade}{sufixo}");
             Console.WriteLine($"Digite 3 para Editar {nomeEntidade}{sufixo}");
             Console.WriteLine($"Digite 4 para Excluir {nomeEntidade}{sufixo}\n");
 
@@ -54,6 +54,11 @@ namespace ControleMedicamentoAP.ConsoleApp.Compartilhado
             MostrarCabecalho($"Cadastro de {nomeEntidade}{sufixo}", "Inserindo um novo registro...");
 
             EntidadeBase registro = ObterRegistro();
+
+            if (TemErrosDeValidacao(registro))
+            {
+                return;
+            }
 
             repositorioBase.Inserir(registro);
 
@@ -84,10 +89,14 @@ namespace ControleMedicamentoAP.ConsoleApp.Compartilhado
 
             Console.WriteLine();
 
-            Console.Write("Digite o id do registro: ");
-            int id = Convert.ToInt32(Console.ReadLine());
+            int id = EncontrarId();
 
             EntidadeBase registroAtualizado = ObterRegistro();
+
+            if (TemErrosDeValidacao(registroAtualizado))
+            {
+                return;
+            }
 
             repositorioBase.Editar(id, registroAtualizado);
 
@@ -102,12 +111,53 @@ namespace ControleMedicamentoAP.ConsoleApp.Compartilhado
 
             Console.WriteLine();
 
-            Console.Write("Digite o id do registro: ");
-            int id = Convert.ToInt32(Console.ReadLine());
+            int id = EncontrarId();
 
             repositorioBase.Excluir(id);
 
             MostrarMensagem("Registro excluído com sucesso!", ConsoleColor.Green);
+        }
+
+        public virtual int EncontrarId()
+        {
+            int idSelecionado;
+            bool idInvalido;
+
+            do
+            {
+                Console.Write("Digite o id do registro: ");
+                int id = Convert.ToInt32(Console.ReadLine());
+
+                idSelecionado = Convert.ToInt32(Console.ReadLine());
+
+                idInvalido = repositorioBase.SelecionarPorId(idSelecionado) == null;
+
+                if (idInvalido)
+                    MostrarMensagem("id invalido,tente novamente", ConsoleColor.Red);
+            } while (idInvalido);
+
+            return idSelecionado;
+         }
+
+        public bool TemErrosDeValidacao(EntidadeBase registro)
+        {
+            bool temErros = false;
+
+            ArrayList erros = registro.Validar();
+
+            if (erros.Count > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                foreach (string erro in erros)
+                {
+                    Console.WriteLine(erro);
+                }
+                Console.ResetColor();
+
+                Console.ReadLine();
+            }
+            return temErros;
         }
 
         protected abstract EntidadeBase ObterRegistro();

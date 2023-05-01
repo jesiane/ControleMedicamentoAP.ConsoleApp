@@ -1,5 +1,6 @@
 ﻿using ControleMedicamentoAP.ConsoleApp.Compartilhado;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,20 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloPaciente
 
             this.nome = pacienteAtualizado.nome;
             this.cartaosus = pacienteAtualizado.cartaosus;
+        }
+
+        public override ArrayList Validar()
+        {
+            ArrayList erros = new ArrayList();
+
+            if (string.IsNullOrEmpty(nome.Trim()))
+                erros.Add("O campo \"nome\" é obrigatório");
+
+            if (string.IsNullOrEmpty(cartaosus.Trim()))
+                erros.Add("O campo \"login\" é obrigatório");
+
+          
+            return erros;
         }
     }
 }

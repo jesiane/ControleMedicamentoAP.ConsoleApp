@@ -39,8 +39,7 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoEntrada
 
             Console.WriteLine();
 
-            Console.Write("Digite o id do registro: ");
-            int id = Convert.ToInt32(Console.ReadLine());
+           int id = EncontrarId();
 
             // Desfazer a alteração a quantidade medicamento;
 
@@ -50,6 +49,11 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoEntrada
 
             requisicaoEntrada.DesfazerRegistroEntrada();
 
+
+            if (TemErrosDeValidacao(registroAtualizado))
+            {
+                return;
+            }
             repositorioBase.Editar(id, registroAtualizado);
 
             MostrarMensagem("Registro editado com sucesso!", ConsoleColor.Green);
@@ -64,8 +68,7 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoEntrada
 
             Console.WriteLine();
 
-            Console.Write("Digite o id do registro: ");
-            int id = Convert.ToInt32(Console.ReadLine());
+            int id = EncontrarId();
 
             RequisicaoEntrada requisicaoEntrada = (RequisicaoEntrada)repositorioRequisicaoEntrada.SelecionarPorId(id);
 
@@ -127,11 +130,16 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoEntrada
             telaFuncionario.VisualizarRegistros(false);
 
             //Selecionar um funcionarios por id
-            Console.Write("Digite o id do funcionario");
-            int idfuncionario = Convert.ToInt32(Console.ReadLine());
+            //*  Console.Write("Digite o id do funcionario");
+            //*  int idfuncionario = Convert.ToInt32(Console.ReadLine());
+
+            int id = EncontrarId();
 
             //Pegar o objeto no repositorio de funcionarios a partir do id seleciomnado
-            Funcionario funcionario = (Funcionario)repositorioFuncionario.SelecionarPorId(idfuncionario);
+            Funcionario funcionario = (Funcionario)repositorioFuncionario.SelecionarPorId(id);
+
+            Console.WriteLine();
+
             return funcionario;
         }
 
@@ -141,11 +149,13 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoEntrada
             telaMedicamento.VisualizarRegistros(false);
 
             //Selecionar um medicamento por id
-            Console.Write("Digite o id do medicamento: ");
-            int idMedicamento = Convert.ToInt32(Console.ReadLine());
+            //   Console.Write("Digite o id do medicamento: ");
+            //   int idMedicamento = Convert.ToInt32(Console.ReadLine());
+
+            int id = EncontrarId();
 
             //Pegar o objeto no repositorio de medicamento a partir do id seleciomnado
-            Medicamento medicamento = (Medicamento)repositorioMedicamento.SelecionarPorId(idMedicamento);
+            Medicamento medicamento = (Medicamento)repositorioMedicamento.SelecionarPorId(id);
             return medicamento;
         }
     }

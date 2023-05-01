@@ -1,7 +1,9 @@
 ﻿using ControleMedicamentoAP.ConsoleApp.Compartilhado;
+using ControleMedicamentoAP.ConsoleApp.ModuloFornecedor;
 using ControleMedicamentoAP.ConsoleApp.ModuloFuncionario;
 using ControleMedicamentoAP.ConsoleApp.ModuloMedicamento;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -37,9 +39,29 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoEntrada
             this.funcionario = requisicaoEntradaAtualizada.funcionario;
         }
 
+        public override ArrayList Validar()
+        {
+            ArrayList erros = new ArrayList();
+
+            if (medicamento == null)
+                erros.Add("O campo \" medicamento \" é obrigatório");
+
+            if (funcionario == null)
+                erros.Add("O campo \"funcionario\" é obrigatório");
+
+            if (data < DateTime.Now.Date)
+                erros.Add("O campo \"data\" é obrigatório");
+
+            if (quantidade < 0)
+                erros.Add("O campos \"quantidade\" deve ser maior que zero");
+
+            return erros;
+
+        }
+
         internal void DesfazerRegistroEntrada()
         {
             medicamento.RemoverQuantidade(quantidade);
-        } 
+        }
     }
 }

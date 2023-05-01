@@ -2,12 +2,8 @@
 using ControleMedicamentoAP.ConsoleApp.ModuloFuncionario;
 using ControleMedicamentoAP.ConsoleApp.ModuloMedicamento;
 using ControleMedicamentoAP.ConsoleApp.ModuloPaciente;
-using ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoEntrada;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using System.Collections;
 
 namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoSaida
 {
@@ -45,7 +41,37 @@ namespace ControleMedicamentoAP.ConsoleApp.ModuloRequisicaoSaida
         {
 
             medicamento.AdicionarQuantidade(quantidade);
+        }
+
+        public void RegistrarSaida()
+        {
+            this.medicamento.RemoverQuantidade(quantidade);
+        }
+        public override ArrayList Validar()
+        {
+            ArrayList erros = new ArrayList();
+
+            if (medicamento == null)
+                erros.Add("O campo \" medicamento \" é obrigatório");
+
+            if (funcionario == null)
+                erros.Add("O campo \"funcionario\" é obrigatório");
+
+            if (paciente == null)
+                erros.Add("O campo \"paciente\" é obrigatório");
+
+            if (data < DateTime.Now.Date)
+                erros.Add("O campo \"data\" é obrigatório");
+
+            if (quantidade < 0)
+                erros.Add("O campos \"quantidade\" deve ser maior que zero");
+
+            if (medicamento != null  & quantidade > medicamento.quantidade)
+                erros.Add("O campo \" quantidade requisitada\" exedeu a quantidade em estoque");
+
+            return erros;
 
         }
+
     }
 }
